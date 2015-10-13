@@ -167,22 +167,22 @@ namespace ComponentSystem
         /// <summary>Called when the component has been disabled.</summary>
         public virtual void OnDisable() { }
 
-        /// <summary>Called before the component should update itself.</summary>
+        /// <summary>Called before the GameObject should update itself.</summary>
         public virtual void OnPreUpdate() { }
 
         /// <summary>Called when the component should update itself.</summary>
         public virtual void OnUpdate() { }
 
-        /// <summary>Called after the component has updated itself.</summary>
+        /// <summary>Called after the GameObject has updated itself.</summary>
         public virtual void OnPostUpdate() { }
 
-        /// <summary>Called before the component should update itself.</summary>
+        /// <summary>Called before the GameObject should update itself.</summary>
         public virtual void OnPreDraw() { }
 
         /// <summary>Called when the component should draw itself.</summary>
         public virtual void OnDraw() { }
 
-        /// <summary>Called after the component has drawn itself.</summary>
+        /// <summary>Called after the GameObject has drawn itself.</summary>
         public virtual void OnPostDraw() { }
 
         /// <summary>Called when the GameObject's visibility is turned on.</summary>
