@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.Serialization;
 using System.Text;
 using ComponentSystem.Components;
+using ComponentSystem.Exceptions;
 using Utilities;
 
 namespace ComponentSystem
@@ -115,22 +118,53 @@ namespace ComponentSystem
 
         /// <summary>Adds a component of type <typeparamref name="T"/>.</summary>
         /// <typeparam name="T">The type of component to add.</typeparam>
-        public T AddComponent<T>(params object[] args) where T : GameComponent
+        public T AddComponent<T>(object parameters = null) where T : GameComponent
         {
-            var component = AddComponent(typeof (T), args);
+            var component = AddComponent(typeof (T), parameters);
             return (T)component;
         }
 
         /// <summary>Adds a component of the given type.</summary>
-        public GameComponent AddComponent(Type type, params object[] args)
+        public GameComponent AddComponent(Type type, object parameters = null)
         {
             ThrowIfDestroyed();
             ThrowIfMismatchingTypes(type, typeof (GameComponent), "The given type is not of GameComponent.");
 
             if (Components.ContainsKey(type))
                 throw new ArgumentException("This component has already been added to this GameObject.");
+            
+            var component = (GameComponent) Activator.CreateInstance(type, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance, null, null, null);
 
-            var component = (GameComponent) Activator.CreateInstance(type, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance, null, args, null);
+            // Parse parameters
+            var dictParams = new Dictionary<string, object>(); // <PropertyName, Value>
+
+            if (parameters != null)
+            {
+                foreach (var prop in parameters.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                {
+                    dictParams.Add(prop.Name, prop.GetValue(parameters));
+                }
+            }
+
+            // Set parameters
+            foreach (var propInfo in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                if (dictParams.ContainsKey(propInfo.Name) && !propInfo.CanWrite)
+                    throw new PropertyIsReadOnlyException();
+
+                if (dictParams.ContainsKey(propInfo.Name))
+                {
+                    try
+                    {
+                        propInfo.SetValue(component, dictParams[propInfo.Name]);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        throw new InvalidPropertyValueTypeException(ex);
+                    }
+                }
+            }
+
             AddComponent(component);
 
             component._Create();

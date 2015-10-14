@@ -5,6 +5,8 @@ namespace Tests
 {
     internal class TestComponent : GameComponent
     {
+        public string TestString { get; set; } = "default";
+
         public override void OnCreate()
         {
             Console.WriteLine(String.Join("  ", "OnCreate Enabled:", Enabled, "Visible:", Visible));

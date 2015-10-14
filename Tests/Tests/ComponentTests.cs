@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using ComponentSystem;
 using ComponentSystem.Components;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,6 +16,9 @@ namespace Tests.Tests
             var testGame = new TestGame();
             testGame.OnInitialized += game =>
             {
+                var sw = new Stopwatch();
+                sw.Start();
+
                 var manager = game.GameObjectManager;
 
                 // Expect there to be 0 game objects.
@@ -50,7 +55,7 @@ namespace Tests.Tests
                 Assert.AreEqual(true, go.Visible, "Expected object to be visible.");
 
                 // Expect every component to be enabled.
-                Assert.IsTrue(go.Components.All(component => component.Value.Enabled), "Expected all components to be enabled.");
+                Assert.IsTrue(go.Components.All(comp => comp.Value.Enabled), "Expected all components to be enabled.");
 
                 go.Enabled = false;
 
@@ -78,6 +83,13 @@ namespace Tests.Tests
                 go = game.AddGameObject();
                 var clone = go.Clone();
 
+                var component = go.AddComponent<TestComponent>();
+                Assert.AreEqual("default", component.TestString, "Expected default TestString value to equal 'default'.");
+
+                go.RemoveComponent<TestComponent>();
+                component = go.AddComponent<TestComponent>(new { TestString = "custom" });
+                Assert.AreEqual("custom", component.TestString, "Expected custom TestString value to equal 'custom'.");
+
                 // Expect clones to not equal the original object.
                 Assert.AreNotEqual(go, clone, "Expected clone to be separate instance");
                 Assert.IsTrue(go.Components.Values.All(comp => !clone.Components.ContainsValue(comp)), "Expected cloned components to be separate instances from original components.");
@@ -87,6 +99,9 @@ namespace Tests.Tests
 
                 // Expect there to be 0 objects.
                 Assert.AreEqual(0, game.GameObjectManager.GameObjects.Count, "Expected total root objects count to be 0.");
+
+                sw.Stop();
+                Console.WriteLine("TestComponents took " + sw.Elapsed.TotalMilliseconds + " ms.");
             };
             testGame.RunOneFrame();
         }

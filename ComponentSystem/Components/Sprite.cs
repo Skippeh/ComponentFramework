@@ -10,12 +10,7 @@ namespace ComponentSystem.Components
         public SpriteEffects SpriteEffects { get; set; } = SpriteEffects.None;
 
         public Texture2D Texture { get; private set; }
-
-        public Sprite(string filePath)
-        {
-            FilePath = filePath;
-        }
-
+        
         public override void OnCreate()
         {
             Texture = Game.Cache.Load<Texture2D>(FilePath);
@@ -31,8 +26,10 @@ namespace ComponentSystem.Components
 
         public override GameComponent Clone()
         {
-            return new Sprite(FilePath)
+            return new Sprite()
             {
+                Texture = Texture,
+                FilePath = FilePath,
                 Tint = Tint,
                 SpriteEffects = SpriteEffects
             };
