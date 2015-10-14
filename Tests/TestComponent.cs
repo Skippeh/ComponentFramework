@@ -36,10 +36,5 @@ namespace Tests
         {
             Console.WriteLine(String.Join("  ", "OnInvisible Enabled:", Enabled, "Visible:", Visible));
         }
-
-        public override GameComponent Clone()
-        {
-            return new TestComponent();
-        }
     }
 }

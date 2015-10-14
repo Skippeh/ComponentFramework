@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\IgnorePropertyAttribute.cs" />
     <Compile Include="ContentSystem\Cache.cs" />
     <Compile Include="ContentSystem\ContentLoaderAttribute.cs" />
     <Compile Include="ContentSystem\ContentLoader.cs" />

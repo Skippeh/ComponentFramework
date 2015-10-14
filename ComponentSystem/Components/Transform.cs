@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ComponentSystem.Attributes;
+using Microsoft.Xna.Framework;
 
 namespace ComponentSystem.Components
 {
@@ -20,9 +21,11 @@ namespace ComponentSystem.Components
         public float Rotation { get; set; }
 
         /// <summary>Gets or sets the local X coordinate.</summary>
+        [IgnoreProperty]
         public float X { get { return position.X; } set { position.X = value; } }
 
         /// <summary>Gets or sets the local Y coordinate.</summary>
+        [IgnoreProperty]
         public float Y { get { return position.Y; } set { position.Y = value; } }
 
         /// <summary>Gets or sets the scale.</summary>
@@ -45,16 +48,6 @@ namespace ComponentSystem.Components
                 Position = position;
             
             return this;
-        }
-
-        public override GameComponent Clone()
-        {
-            return new Transform()
-            {
-                Position = Position,
-                Rotation = Rotation,
-                Scale = Scale
-            };
         }
     }
 }

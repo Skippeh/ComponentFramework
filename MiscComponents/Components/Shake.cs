@@ -45,16 +45,5 @@ namespace MiscComponents.Components
         {
             GameObject.Transform.Position = preDrawPosition;
         }
-
-        public override GameComponent Clone()
-        {
-            return new Shake()
-            {
-                Intensity = Intensity,
-                Frequency = Frequency,
-                preDrawPosition = preDrawPosition,
-                timeSinceFrequencyUpdate = timeSinceFrequencyUpdate
-            };
-        }
     }
 }

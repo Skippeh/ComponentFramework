@@ -23,16 +23,5 @@ namespace ComponentSystem.Components
 
             Game.SB.Draw(Texture, transform.WorldPosition, null, Tint, transform.Rotation, origin, transform.Scale, SpriteEffects, 0);
         }
-
-        public override GameComponent Clone()
-        {
-            return new Sprite()
-            {
-                Texture = Texture,
-                FilePath = FilePath,
-                Tint = Tint,
-                SpriteEffects = SpriteEffects
-            };
-        }
     }
 }

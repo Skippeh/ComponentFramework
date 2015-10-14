@@ -518,7 +518,7 @@ namespace ComponentSystem
                 Type type = keyval.Key;
                 GameComponent component = keyval.Value;
 
-                clone.AddComponent(component.Clone());
+                clone.AddComponent(component.Clone(clone));
             }
 
             // Clone children

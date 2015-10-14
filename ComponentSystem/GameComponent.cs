@@ -1,4 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using ComponentSystem.Attributes;
 
 namespace ComponentSystem
 {
@@ -39,9 +43,18 @@ namespace ComponentSystem
         private bool initialized;
         private bool enabled;
 
+        private static readonly Dictionary<Type, PropertyInfo[]> cloneableProperties = new Dictionary<Type, PropertyInfo[]>();
+
         protected GameComponent()
         {
-            
+            var type = GetType();
+            if (!cloneableProperties.ContainsKey(GetType()))
+            {
+                // Add all public properties that can be set which don't have the IgnoreProperty attribute and is a member of this component's class.
+                cloneableProperties.Add(type, type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    .Where(prop => prop.CanWrite && prop.SetMethod.IsPublic && prop.DeclaringType == type && prop.GetCustomAttribute<IgnorePropertyAttribute>() == null)
+                    .ToArray());
+            }
         }
 
         internal void _Create()
@@ -197,6 +210,27 @@ namespace ComponentSystem
                 throw new InvalidOperationException("This component has been destroyed.");
         }
 
-        public abstract GameComponent Clone();
+        /// <summary>Called on the original component when it's being cloned. This is a good time to do any deeper cloning if necessary.</summary>
+        protected virtual void OnClone(GameComponent clone) { }
+
+        internal GameComponent Clone(GameObject newOwner)
+        {
+            if (newOwner == GameObject)
+                throw new ArgumentException("The cloned GameComponent's owner can't be the same GameObject as the original.");
+
+            var type = GetType();
+            var clone = (GameComponent)Activator.CreateInstance(type, true);
+            clone.GameObject = newOwner;
+            clone.enabled = enabled;
+
+            foreach (var propInfo in cloneableProperties[type])
+            {
+                propInfo.SetValue(clone, propInfo.GetValue(this));
+            }
+
+            OnClone(clone);
+            
+            return clone;
+        }
     }
 }
