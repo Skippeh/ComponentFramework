@@ -13,7 +13,8 @@ namespace MiscComponents.Components
         private Vector2 shakeOffset;
         private Vector2 preDrawPosition;
         private float timeSinceFrequencyUpdate = 0;
-        private readonly Random random = new Random();
+
+        private static readonly Random random = new Random();
 
         public override void OnCreate()
         {
