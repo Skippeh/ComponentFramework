@@ -63,6 +63,7 @@
     <Compile Include="Tests\ComponentTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestGame.cs" />
+    <Compile Include="Tests\MathfTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ComponentSystem\ComponentSystem.csproj">
