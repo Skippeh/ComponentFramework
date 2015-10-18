@@ -14,8 +14,6 @@ namespace MiscComponents.Components
         private Vector2 preDrawPosition;
         private float timeSinceFrequencyUpdate = 0;
 
-        private static readonly Random random = new Random();
-
         public override void OnCreate()
         {
             timeSinceFrequencyUpdate = Frequency;
@@ -27,8 +25,8 @@ namespace MiscComponents.Components
 
             if (timeSinceFrequencyUpdate >= Frequency)
             {
-                shakeOffset.X = Intensity.X * (float) (random.NextDouble() * 2f - 1f);
-                shakeOffset.Y = Intensity.Y * (float) (random.NextDouble() * 2f - 1f);
+                shakeOffset.X = Intensity.X * (Mathf.Random() * 2f - 1f);
+                shakeOffset.Y = Intensity.Y * (Mathf.Random() * 2f - 1f);
                 timeSinceFrequencyUpdate = 0;
             }
         }
