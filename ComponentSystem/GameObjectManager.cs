@@ -95,8 +95,13 @@ namespace ComponentSystem
         {
             var sb = new StringBuilder();
 
-            foreach (var go in GameObjects)
-                sb.AppendLine(go.ToHierarchyString());
+            for (int i = 0; i < GameObjects.Count; i++)
+            {
+                sb.Append(GameObjects[i].ToHierarchyString());
+
+                if (i < GameObjects.Count - 1)
+                    sb.Append("\n");
+            }
 
             return sb.ToString();
         }
