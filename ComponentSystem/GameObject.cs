@@ -8,6 +8,7 @@ using System.Text;
 using ComponentSystem.Components;
 using ComponentSystem.Exceptions;
 using Utilities;
+using Utilities.Exceptions;
 
 namespace ComponentSystem
 {
@@ -201,12 +202,8 @@ namespace ComponentSystem
             ThrowIfMismatchingTypes(type, typeof (GameComponent), "The given type is not of GameComponent.");
             
             var component = Components[type];
-
-            if (Visible)
-                component._FireHide();
-
-            if (Enabled)
-                component._Disable();
+            
+            component.Enabled = false;
 
             component._Destroy();
             Components.Remove(type);

@@ -1,6 +1,6 @@
 using System;
 
-namespace ComponentSystem.Exceptions
+namespace Utilities.Exceptions
 {
     /// <summary>This exception is thrown when an attempt was made to set the value of a readonly property.</summary>
     public class PropertyIsReadOnlyException : Exception

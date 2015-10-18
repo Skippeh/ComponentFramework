@@ -1,10 +1,10 @@
 ﻿namespace ComponentSystem.ContentSystem
 {
-    internal abstract class ContentLoader<T>
+    public abstract class ContentLoader<TContentType>
     {
         public ComponentBasedGame Game { get; internal set; }
 
-        public abstract T Load(string filePath);
-        public abstract void Unload(T content);
+        public abstract TContentType Load(string filePath);
+        public abstract void Unload(TContentType content);
     }
 }

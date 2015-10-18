@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ComponentSystem.Exceptions
+namespace Utilities.Exceptions
 {
     /// <summary>This exception is thrown when a value given to a property could not be converted to the property's type.</summary>
     public class InvalidPropertyValueTypeException : Exception

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using ComponentSystem.Attributes;
+using ComponentSystem.Components;
 
 namespace ComponentSystem
 {
@@ -16,6 +17,12 @@ namespace ComponentSystem
 
         /// <summary>Gets the currently running Game.</summary>
         public ComponentBasedGame Game => GameObject.Game;
+
+        /// <summary>Gets the transform of the GameObject.</summary>
+        public Transform Transform => GameObject.Transform;
+
+        /// <summary>Gets the parent of the GameObject if any.</summary>
+        public GameObject Parent => GameObject.Parent;
 
         /// <summary>Gets whether this component is destroyed. If true then it's not safe to use.</summary>
         public bool Destroyed { get; private set; }

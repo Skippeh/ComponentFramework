@@ -42,15 +42,12 @@ namespace ComponentSystem
         /// </summary>
         /// <typeparam name="T">The GameObject type.</typeparam>
         /// <param name="name">The name of the GameObject.</param>
-        /// <param name="args">The arguments to pass to the GameObject constructor.</param>
         /// <returns></returns>
-        public T AddGameObject<T>(string name = null, params object[] args) where T : GameObject
+        public T AddGameObject<T>(string name = null) where T : GameObject
         {
-            var argsList = args.ToList();
-            argsList.Insert(0, this);
-            args = argsList.ToArray();
+            var args = new object[] { this };
 
-            var gameObject = (GameObject) Activator.CreateInstance(typeof (T), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance, null, args, null);
+            var gameObject = (GameObject) Activator.CreateInstance(typeof (T), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, args, null);
             GameObjectManager.AddObject(gameObject);
             gameObject.Name = name ?? gameObject.GetDefaultName();
             gameObject.AddComponent<Transform>(); // Every GameObject should have a Transform.

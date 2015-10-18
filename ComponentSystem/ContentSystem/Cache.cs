@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using ComponentSystem.Exceptions;
 
 namespace ComponentSystem.ContentSystem
 {
@@ -13,18 +15,38 @@ namespace ComponentSystem.ContentSystem
         internal Cache(ComponentBasedGame game)
         {
             this.game = game;
-            
-            foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
+
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            IEnumerable<Type> types = assemblies.SelectMany(assembly => assembly.GetTypes());
+
+            foreach (var type in types)
             {
                 var attribute = type.GetCustomAttribute<ContentLoaderAttribute>();
 
                 if (attribute != null)
                 {
+                    Type[] genericArguments = type.BaseType.GenericTypeArguments;
+                    Type contentLoaderType;
+
+                    try
+                    {
+                        contentLoaderType = typeof (ContentLoader<>).MakeGenericType(genericArguments.Length > 0 ? genericArguments[0] : null);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        throw new InvalidContentLoaderBaseTypeException("The content loader '" + type.Name + "' does not inherit from ContentType<TContentType>.", ex);
+                    }
+
+                    if (!type.IsSubclassOf(contentLoaderType))
+                    {
+                        throw new InvalidContentLoaderBaseTypeException(type, contentLoaderType);
+                    }
+
                     attribute.ApplyClass(type);
                     object instance = Activator.CreateInstance(type, true);
                     SetProperty(instance, "Game", game);
 
-                    var contentType = type.BaseType.GetGenericArguments()[0];
+                    var contentType = genericArguments[0];
                     contentLoaders.Add(contentType, instance);
                 }
             }
@@ -36,7 +58,7 @@ namespace ComponentSystem.ContentSystem
                 return (T)cache[filePath];
 
             if (!contentLoaders.ContainsKey(typeof (T)))
-                throw new ArgumentException("There is no ContentLoader for this type.");
+                throw new ArgumentException("There is no ContentLoader for type '" + typeof(T).Name + ".");
             
             var loader = contentLoaders[typeof(T)];
             object content = InvokeMethod(loader, "Load", filePath);

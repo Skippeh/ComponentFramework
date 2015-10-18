@@ -44,6 +44,7 @@ namespace ComponentSystem
             return direction * (float) random.NextDouble() * radius;
         }
 
+        /// <summary>Gets a normalized vector angle based on the given angle.</summary>
         public static Vector2 ToDirection(float radians)
         {
             return new Vector2((float) Math.Sin(radians), (float) Math.Cos(radians));

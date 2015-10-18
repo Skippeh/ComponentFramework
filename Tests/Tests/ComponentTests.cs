@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Remoting;
 using ComponentSystem;
 using ComponentSystem.Components;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -80,9 +81,14 @@ namespace Tests.Tests
                 Assert.AreEqual(0, manager.GameObjects.Count, "Expected 0 root objects.");
                 Assert.AreEqual(true, go.Destroyed, "Expected object to be destroyed.");
 
+                // Test cloning
                 go = game.AddGameObject();
                 var clone = go.Clone();
 
+                // Expect clone name to be 'GameObject (Clone)'
+                Assert.AreEqual(go.Name + " (Clone)", clone.Name, "Expected clone's name to be original name plus ' (Clone)'.");
+
+                // Test setting properties
                 var component = go.AddComponent<TestComponent>();
                 Assert.AreEqual("default", component.TestString, "Expected default TestString value to equal 'default'.");
 
@@ -95,6 +101,8 @@ namespace Tests.Tests
                 Assert.IsTrue(go.Components.Values.All(comp => !clone.Components.ContainsValue(comp)), "Expected cloned components to be separate instances from original components.");
                 Assert.IsTrue(go.Children.All(_child => !clone.Children.Contains(_child)), "Expected cloned children to be separate instances from original children.");
                 
+                Console.WriteLine(game.ToHierarchyString());
+
                 game.GameObjectManager.Destroy();
 
                 // Expect there to be 0 objects.

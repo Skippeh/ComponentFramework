@@ -13,11 +13,9 @@ namespace ComponentSystem.Components
         }
 
         /// <summary>Gets the world position.</summary>
-        public Vector2 WorldPosition => (GameObject.Parent?.Transform.WorldPosition ?? Vector2.Zero) + Position;
+        public Vector2 WorldPosition => (Parent?.Transform.WorldPosition ?? Vector2.Zero) + Position;
 
-        /// <summary>
-        /// The current rotation in radians.
-        /// </summary>
+        /// <summary>The current rotation in radians.</summary>
         public float Rotation { get; set; }
 
         /// <summary>Gets or sets the local X coordinate.</summary>
