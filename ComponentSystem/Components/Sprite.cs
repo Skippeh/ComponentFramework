@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ComponentSystem.Logging;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace ComponentSystem.Components
@@ -13,6 +14,9 @@ namespace ComponentSystem.Components
         
         public override void OnCreate()
         {
+            if (FilePath == null)
+                LogError("FilePath is not set.");
+
             Texture = Game.Cache.Load<Texture2D>(FilePath);
         }
 

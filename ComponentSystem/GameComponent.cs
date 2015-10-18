@@ -52,9 +52,11 @@ namespace ComponentSystem
 
         private static readonly Dictionary<Type, PropertyInfo[]> cloneableProperties = new Dictionary<Type, PropertyInfo[]>();
 
+        private readonly Type ThisType;
+
         protected GameComponent()
         {
-            var type = GetType();
+            var type = ThisType = GetType();
             if (!cloneableProperties.ContainsKey(GetType()))
             {
                 // Add all public properties that can be set which don't have the IgnoreProperty attribute and is a member of this component's class.
@@ -219,6 +221,21 @@ namespace ComponentSystem
 
         /// <summary>Called on the original component when it's being cloned. This is a good time to do any deeper cloning if necessary.</summary>
         protected virtual void OnClone(GameComponent clone) { }
+
+        protected void Log(params object[] message)
+        {
+            Logging.Log.Info(ThisType, message);
+        }
+
+        protected void LogDebug(params object[] message)
+        {
+            Logging.Log.Debug(ThisType, message);
+        }
+
+        protected void LogError(params object[] message)
+        {
+            Logging.Log.Error(ThisType, message);
+        }
 
         internal GameComponent Clone(GameObject newOwner)
         {
